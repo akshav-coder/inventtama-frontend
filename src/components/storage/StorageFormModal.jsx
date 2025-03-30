@@ -21,12 +21,40 @@ const initialForm = {
   notes: "",
 };
 
+const fieldConfig = [
+  { name: "date", label: "Date", type: "date", grid: 3 },
+  {
+    name: "tamarindType",
+    label: "Tamarind Type",
+    select: true,
+    options: ["Whole", "Raw Pod"],
+    grid: 3,
+  },
+  { name: "quantityIn", label: "Quantity In (Kg)", grid: 2 },
+  { name: "quantityOut", label: "Quantity Out (Kg)", grid: 2 },
+  {
+    name: "reasonForMovement",
+    label: "Reason",
+    select: true,
+    options: ["To Unit 1", "To Unit 2", "Store"],
+    grid: 4,
+  },
+  { name: "storageLocation", label: "Storage Location", grid: 4 },
+  { name: "remainingStock", label: "Remaining Stock", grid: 4 },
+  {
+    name: "notes",
+    label: "Notes",
+    multiline: true,
+    rows: 2,
+    grid: 12,
+  },
+];
+
 const StorageFormModal = ({ open, onClose, onSubmit, initialValues }) => {
   const [form, setForm] = useState(initialForm);
 
   useEffect(() => {
-    if (initialValues) setForm(initialValues);
-    else setForm(initialForm);
+    setForm(initialValues || initialForm);
   }, [initialValues, open]);
 
   const handleChange = (e) => {
@@ -44,91 +72,31 @@ const StorageFormModal = ({ open, onClose, onSubmit, initialValues }) => {
       <DialogTitle>{initialValues ? "Edit" : "Add"} Storage Entry</DialogTitle>
       <DialogContent>
         <Grid container spacing={2} mt={1}>
-          <Grid item xs={12} sm={6} md={3}>
-            <TextField
-              fullWidth
-              type="date"
-              name="date"
-              label="Date"
-              value={form.date}
-              onChange={handleChange}
-              InputLabelProps={{ shrink: true }}
-            />
-          </Grid>
-          <Grid item xs={12} sm={6} md={3}>
-            <TextField
-              select
-              fullWidth
-              name="tamarindType"
-              label="Tamarind Type"
-              value={form.tamarindType}
-              onChange={handleChange}
-            >
-              <MenuItem value="Whole">Whole</MenuItem>
-              <MenuItem value="Raw Pod">Raw Pod</MenuItem>
-            </TextField>
-          </Grid>
-          <Grid item xs={12} sm={6} md={2}>
-            <TextField
-              fullWidth
-              name="quantityIn"
-              label="Quantity In (Kg)"
-              value={form.quantityIn}
-              onChange={handleChange}
-            />
-          </Grid>
-          <Grid item xs={12} sm={6} md={2}>
-            <TextField
-              fullWidth
-              name="quantityOut"
-              label="Quantity Out (Kg)"
-              value={form.quantityOut}
-              onChange={handleChange}
-            />
-          </Grid>
-          <Grid item xs={12} sm={6} md={4}>
-            <TextField
-              select
-              fullWidth
-              name="reasonForMovement"
-              label="Reason"
-              value={form.reasonForMovement}
-              onChange={handleChange}
-            >
-              <MenuItem value="To Unit 1">To Unit 1</MenuItem>
-              <MenuItem value="To Unit 2">To Unit 2</MenuItem>
-              <MenuItem value="Store">Store</MenuItem>
-            </TextField>
-          </Grid>
-          <Grid item xs={12} sm={6} md={4}>
-            <TextField
-              fullWidth
-              name="storageLocation"
-              label="Storage Location"
-              value={form.storageLocation}
-              onChange={handleChange}
-            />
-          </Grid>
-          <Grid item xs={12} sm={6} md={4}>
-            <TextField
-              fullWidth
-              name="remainingStock"
-              label="Remaining Stock"
-              value={form.remainingStock}
-              onChange={handleChange}
-            />
-          </Grid>
-          <Grid item xs={12}>
-            <TextField
-              fullWidth
-              name="notes"
-              label="Notes"
-              value={form.notes}
-              onChange={handleChange}
-              multiline
-              rows={2}
-            />
-          </Grid>
+          {fieldConfig.map((field) => (
+            <Grid size={{ xs: 12, sm: 6, md: 6 }} key={field.name}>
+              <TextField
+                fullWidth
+                name={field.name}s
+                label={field.label}
+                type={field.type || "text"}
+                value={form[field.name]}
+                onChange={handleChange}
+                multiline={field.multiline || false}
+                rows={field.rows || 1}
+                select={field.select || false}
+                InputLabelProps={
+                  field.type === "date" ? { shrink: true } : undefined
+                }
+              >
+                {field.select &&
+                  field.options.map((opt) => (
+                    <MenuItem key={opt} value={opt}>
+                      {opt}
+                    </MenuItem>
+                  ))}
+              </TextField>
+            </Grid>
+          ))}
         </Grid>
       </DialogContent>
       <DialogActions>

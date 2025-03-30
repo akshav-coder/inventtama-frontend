@@ -18,12 +18,20 @@ const initialForm = {
   notes: "",
 };
 
+const fieldConfig = [
+  { name: "date", label: "Date", type: "date", grid: 6 },
+  { name: "fromUnit", label: "From Unit", grid: 6 },
+  { name: "toUnit", label: "To Unit", grid: 6 },
+  { name: "item", label: "Item", grid: 6 },
+  { name: "quantity", label: "Quantity", type: "number", grid: 6 },
+  { name: "notes", label: "Notes", multiline: true, rows: 2, grid: 12 },
+];
+
 const TransferFormModal = ({ open, onClose, onSubmit, initialValues }) => {
   const [form, setForm] = useState(initialForm);
 
   useEffect(() => {
-    if (initialValues) setForm(initialValues);
-    else setForm(initialForm);
+    setForm(initialValues || initialForm);
   }, [initialValues, open]);
 
   const handleChange = (e) => {
@@ -41,64 +49,21 @@ const TransferFormModal = ({ open, onClose, onSubmit, initialValues }) => {
       <DialogTitle>{initialValues ? "Edit" : "Add"} Unit Transfer</DialogTitle>
       <DialogContent>
         <Grid container spacing={2} mt={1}>
-          <Grid item xs={12} sm={6}>
-            <TextField
-              label="Date"
-              name="date"
-              type="date"
-              value={form.date}
-              onChange={handleChange}
-              fullWidth
-              InputLabelProps={{ shrink: true }}
-            />
-          </Grid>
-          <Grid item xs={12} sm={6}>
-            <TextField
-              label="From Unit"
-              name="fromUnit"
-              value={form.fromUnit}
-              onChange={handleChange}
-              fullWidth
-            />
-          </Grid>
-          <Grid item xs={12} sm={6}>
-            <TextField
-              label="To Unit"
-              name="toUnit"
-              value={form.toUnit}
-              onChange={handleChange}
-              fullWidth
-            />
-          </Grid>
-          <Grid item xs={12} sm={6}>
-            <TextField
-              label="Item"
-              name="item"
-              value={form.item}
-              onChange={handleChange}
-              fullWidth
-            />
-          </Grid>
-          <Grid item xs={12} sm={6}>
-            <TextField
-              label="Quantity"
-              name="quantity"
-              value={form.quantity}
-              onChange={handleChange}
-              fullWidth
-            />
-          </Grid>
-          <Grid item xs={12}>
-            <TextField
-              label="Notes"
-              name="notes"
-              value={form.notes}
-              onChange={handleChange}
-              multiline
-              rows={2}
-              fullWidth
-            />
-          </Grid>
+          {fieldConfig.map((field) => (
+            <Grid size={{ xs: 12, sm: 6, md: 6 }} key={field.name}>
+              <TextField
+                fullWidth
+                name={field.name}
+                label={field.label}
+                type={field.type || "text"}
+                value={form[field.name]}
+                onChange={handleChange}
+                multiline={field.multiline || false}
+                rows={field.rows || 1}
+               
+              />
+            </Grid>
+          ))}
         </Grid>
       </DialogContent>
       <DialogActions>

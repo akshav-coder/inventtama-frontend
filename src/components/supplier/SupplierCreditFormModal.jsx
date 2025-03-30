@@ -18,6 +18,25 @@ const initialForm = {
   notes: "",
 };
 
+const fieldConfig = [
+  { name: "supplierName", label: "Supplier Name", grid: 12 },
+  { name: "totalPurchases", label: "Total Purchases", type: "number", grid: 6 },
+  { name: "amountPaid", label: "Amount Paid", type: "number", grid: 6 },
+  {
+    name: "remainingBalance",
+    label: "Remaining Balance",
+    type: "number",
+    grid: 6,
+  },
+  {
+    name: "lastPaymentDate",
+    label: "Last Payment Date",
+    type: "date",
+    grid: 6,
+  },
+  { name: "notes", label: "Notes", multiline: true, rows: 2, grid: 12 },
+];
+
 const SupplierCreditFormModal = ({
   open,
   onClose,
@@ -27,8 +46,7 @@ const SupplierCreditFormModal = ({
   const [form, setForm] = useState(initialForm);
 
   useEffect(() => {
-    if (initialValues) setForm(initialValues);
-    else setForm(initialForm);
+    setForm(initialValues || initialForm);
   }, [initialValues, open]);
 
   const handleChange = (e) => {
@@ -46,64 +64,23 @@ const SupplierCreditFormModal = ({
       <DialogTitle>{initialValues ? "Edit" : "Add"} Supplier Entry</DialogTitle>
       <DialogContent>
         <Grid container spacing={2} mt={1}>
-          <Grid item xs={12}>
-            <TextField
-              label="Supplier Name"
-              name="supplierName"
-              value={form.supplierName}
-              onChange={handleChange}
-              fullWidth
-            />
-          </Grid>
-          <Grid item xs={6}>
-            <TextField
-              label="Total Purchases"
-              name="totalPurchases"
-              value={form.totalPurchases}
-              onChange={handleChange}
-              fullWidth
-            />
-          </Grid>
-          <Grid item xs={6}>
-            <TextField
-              label="Amount Paid"
-              name="amountPaid"
-              value={form.amountPaid}
-              onChange={handleChange}
-              fullWidth
-            />
-          </Grid>
-          <Grid item xs={6}>
-            <TextField
-              label="Remaining Balance"
-              name="remainingBalance"
-              value={form.remainingBalance}
-              onChange={handleChange}
-              fullWidth
-            />
-          </Grid>
-          <Grid item xs={6}>
-            <TextField
-              type="date"
-              label="Last Payment Date"
-              name="lastPaymentDate"
-              value={form.lastPaymentDate}
-              onChange={handleChange}
-              InputLabelProps={{ shrink: true }}
-              fullWidth
-            />
-          </Grid>
-          <Grid item xs={12}>
-            <TextField
-              label="Notes"
-              name="notes"
-              value={form.notes}
-              onChange={handleChange}
-              fullWidth
-              multiline
-              rows={2}
-            />
-          </Grid>
+          {fieldConfig.map((field) => (
+            <Grid size={{ xs: 12, sm: 6, md: 6 }} key={field.name}>
+              <TextField
+                fullWidth
+                name={field.name}
+                label={field.label}
+                type={field.type || "text"}
+                value={form[field.name]}
+                onChange={handleChange}
+                multiline={field.multiline || false}
+                rows={field.rows || 1}
+                InputLabelProps={
+                  field.type === "date" ? { shrink: true } : undefined
+                }
+              />
+            </Grid>
+          ))}
         </Grid>
       </DialogContent>
       <DialogActions>

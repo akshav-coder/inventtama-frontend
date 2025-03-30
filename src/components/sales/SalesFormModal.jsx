@@ -22,12 +22,55 @@ const initialForm = {
   notes: "",
 };
 
+const fieldConfig = [
+  { name: "date", label: "Date", type: "date", grid: 6 },
+  { name: "customerName", label: "Customer Name", grid: 6 },
+  {
+    name: "customerType",
+    label: "Customer Type",
+    select: true,
+    options: ["Wholesale", "Retail"],
+    grid: 6,
+  },
+  {
+    name: "quantity",
+    label: "Quantity (Kg)",
+    type: "number",
+    grid: 6,
+  },
+  {
+    name: "pricePerKg",
+    label: "Price per Kg",
+    type: "number",
+    grid: 6,
+  },
+  {
+    name: "amountPaid",
+    label: "Amount Paid",
+    type: "number",
+    grid: 6,
+  },
+  {
+    name: "paymentMode",
+    label: "Payment Mode",
+    select: true,
+    options: ["Cash", "Credit"],
+    grid: 6,
+  },
+  {
+    name: "notes",
+    label: "Notes",
+    multiline: true,
+    rows: 2,
+    grid: 12,
+  },
+];
+
 const SalesFormModal = ({ open, onClose, onSubmit, initialValues }) => {
   const [form, setForm] = useState(initialForm);
 
   useEffect(() => {
-    if (initialValues) setForm(initialValues);
-    else setForm(initialForm);
+    setForm(initialValues || initialForm);
   }, [initialValues, open]);
 
   const handleChange = (e) => {
@@ -36,9 +79,14 @@ const SalesFormModal = ({ open, onClose, onSubmit, initialValues }) => {
   };
 
   const handleSubmit = () => {
-    const totalAmount = form.quantity * form.pricePerKg;
+    const quantity = parseFloat(form.quantity) || 0;
+    const pricePerKg = parseFloat(form.pricePerKg) || 0;
+    const amountPaid = parseFloat(form.amountPaid) || 0;
+
+    const totalAmount = quantity * pricePerKg;
     const remainingBalance =
-      form.customerType === "Wholesale" ? totalAmount - form.amountPaid : 0;
+      form.customerType === "Wholesale" ? totalAmount - amountPaid : 0;
+
     onSubmit({ ...form, totalAmount, remainingBalance });
     onClose();
   };
@@ -48,93 +96,28 @@ const SalesFormModal = ({ open, onClose, onSubmit, initialValues }) => {
       <DialogTitle>{initialValues ? "Edit" : "Add"} Sale</DialogTitle>
       <DialogContent>
         <Grid container spacing={2} mt={1}>
-          <Grid item xs={12} sm={6}>
-            <TextField
-              label="Date"
-              name="date"
-              type="date"
-              value={form.date}
-              onChange={handleChange}
-              fullWidth
-              InputLabelProps={{ shrink: true }}
-            />
-          </Grid>
-          <Grid item xs={12} sm={6}>
-            <TextField
-              label="Customer Name"
-              name="customerName"
-              value={form.customerName}
-              onChange={handleChange}
-              fullWidth
-            />
-          </Grid>
-          <Grid item xs={12} sm={6}>
-            <TextField
-              select
-              label="Customer Type"
-              name="customerType"
-              value={form.customerType}
-              onChange={handleChange}
-              fullWidth
-            >
-              <MenuItem value="Wholesale">Wholesale</MenuItem>
-              <MenuItem value="Retail">Retail</MenuItem>
-            </TextField>
-          </Grid>
-          <Grid item xs={12} sm={6}>
-            <TextField
-              label="Quantity (Kg)"
-              name="quantity"
-              value={form.quantity}
-              onChange={handleChange}
-              fullWidth
-              type="number"
-            />
-          </Grid>
-          <Grid item xs={12} sm={6}>
-            <TextField
-              label="Price per Kg"
-              name="pricePerKg"
-              value={form.pricePerKg}
-              onChange={handleChange}
-              fullWidth
-              type="number"
-            />
-          </Grid>
-          <Grid item xs={12} sm={6}>
-            <TextField
-              label="Amount Paid"
-              name="amountPaid"
-              value={form.amountPaid}
-              onChange={handleChange}
-              fullWidth
-              type="number"
-            />
-          </Grid>
-          <Grid item xs={12} sm={6}>
-            <TextField
-              select
-              label="Payment Mode"
-              name="paymentMode"
-              value={form.paymentMode}
-              onChange={handleChange}
-              fullWidth
-            >
-              <MenuItem value="Cash">Cash</MenuItem>
-              <MenuItem value="Credit">Credit</MenuItem>
-            </TextField>
-          </Grid>
-          <Grid item xs={12}>
-            <TextField
-              label="Notes"
-              name="notes"
-              value={form.notes}
-              onChange={handleChange}
-              fullWidth
-              multiline
-              rows={2}
-            />
-          </Grid>
+          {fieldConfig.map((field) => (
+            <Grid size={{ xs: 12, sm: 6, md: 6 }} key={field.name}>
+              <TextField
+                fullWidth
+                name={field.name}
+                label={field.label}
+                type={field.type || "text"}
+                value={form[field.name]}
+                onChange={handleChange}
+                multiline={field.multiline || false}
+                rows={field.rows || 1}
+                select={field.select || false}
+              >
+                {field.select &&
+                  field.options.map((opt) => (
+                    <MenuItem key={opt} value={opt}>
+                      {opt}
+                    </MenuItem>
+                  ))}
+              </TextField>
+            </Grid>
+          ))}
         </Grid>
       </DialogContent>
       <DialogActions>

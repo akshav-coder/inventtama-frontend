@@ -20,12 +20,27 @@ const initialForm = {
   location: "",
 };
 
+const fieldConfig = [
+  { name: "date", label: "Date", type: "date", grid: 12 },
+  {
+    name: "item",
+    label: "Item",
+    select: true,
+    options: ["Raw Tamarind", "Paste", "Salt", "Oil"],
+    grid: 12,
+  },
+  { name: "openingStock", label: "Opening Stock", type: "number", grid: 6 },
+  { name: "stockIn", label: "Stock In", type: "number", grid: 6 },
+  { name: "stockOut", label: "Stock Out", type: "number", grid: 6 },
+  { name: "closingStock", label: "Closing Stock", type: "number", grid: 6 },
+  { name: "location", label: "Location", grid: 12 },
+];
+
 const InventoryFormModal = ({ open, onClose, onSubmit, initialValues }) => {
   const [form, setForm] = useState(initialForm);
 
   useEffect(() => {
-    if (initialValues) setForm(initialValues);
-    else setForm(initialForm);
+    setForm(initialValues || initialForm);
   }, [initialValues, open]);
 
   const handleChange = (e) => {
@@ -45,77 +60,31 @@ const InventoryFormModal = ({ open, onClose, onSubmit, initialValues }) => {
       </DialogTitle>
       <DialogContent>
         <Grid container spacing={2} mt={1}>
-          <Grid item xs={12}>
-            <TextField
-              label="Date"
-              name="date"
-              type="date"
-              fullWidth
-              value={form.date}
-              onChange={handleChange}
-              InputLabelProps={{ shrink: true }}
-            />
-          </Grid>
-          <Grid item xs={12}>
-            <TextField
-              select
-              label="Item"
-              name="item"
-              fullWidth
-              value={form.item}
-              onChange={handleChange}
-            >
-              <MenuItem value="Raw Tamarind">Raw Tamarind</MenuItem>
-              <MenuItem value="Paste">Paste</MenuItem>
-              <MenuItem value="Salt">Salt</MenuItem>
-              <MenuItem value="Oil">Oil</MenuItem>
-            </TextField>
-          </Grid>
-          <Grid item xs={6}>
-            <TextField
-              label="Opening Stock"
-              name="openingStock"
-              fullWidth
-              value={form.openingStock}
-              onChange={handleChange}
-            />
-          </Grid>
-          <Grid item xs={6}>
-            <TextField
-              label="Stock In"
-              name="stockIn"
-              fullWidth
-              value={form.stockIn}
-              onChange={handleChange}
-            />
-          </Grid>
-          <Grid item xs={6}>
-            <TextField
-              label="Stock Out"
-              name="stockOut"
-              fullWidth
-              value={form.stockOut}
-              onChange={handleChange}
-            />
-          </Grid>
-          <Grid item xs={6}>
-            <TextField
-              label="Closing Stock"
-              name="closingStock"
-              fullWidth
-              value={form.closingStock}
-              onChange={handleChange}
-            />
-          </Grid>
-          <Grid item xs={12}>
-            <TextField
-              label="Location"
-              name="location"
-              fullWidth
-              value={form.location}
-              onChange={handleChange}
-            />
-          </Grid>
+          {fieldConfig.map((field) => (
+            <Grid size={{ xs: 12, sm: 6, md: 6 }} key={field.name}>
+              <TextField
+                fullWidth
+                name={field.name}
+                label={field.label}
+                type={field.type || "text"}
+                value={form[field.name]}
+                onChange={handleChange}
+                multiline={field.multiline || false}
+                rows={field.rows || 1}
+                select={field.select || false}
+                InputLabelProps={
+                  field.type === "date" ? { shrink: true } : undefined
+                }
+              >
+                {field.select &&
+                  field.options.map((opt) => (
+                    <MenuItem key={opt} value={opt}>
+                      {opt}
+                    </MenuItem>
+                  ))}
+              </TextField>
+            </Grid>
+          ))}
         </Grid>
       </DialogContent>
       <DialogActions>
