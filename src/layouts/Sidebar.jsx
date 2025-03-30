@@ -77,7 +77,7 @@ const Sidebar = ({ mobileOpen, handleDrawerToggle }) => {
             },
           }}
         >
-          <Box sx={{ display: "flex", alignItems: "center" }}>{icon}</Box>
+          <Box sx={{ display: "flex", alignItems: "center" }}>{icon}ss</Box>
           <Box sx={{ fontWeight: 500, fontSize: "15px" }}>{text}</Box>
         </Box>
       ))}
