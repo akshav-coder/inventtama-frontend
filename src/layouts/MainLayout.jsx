@@ -47,6 +47,15 @@ const MainLayout = ({ children }) => {
       <CssBaseline />
       <AppBar position="fixed" sx={{ zIndex: 1201 }}>
         <Toolbar>
+          <IconButton
+            color="inherit"
+            aria-label="open drawer"
+            edge="start"
+            onClick={handleDrawerToggle}
+            sx={{ mr: 2, display: { md: "none" } }}
+          >
+            <MenuIcon />
+          </IconButton>
           <Typography variant="h6" sx={{ flexGrow: 1 }}>
             InventTama
           </Typography>
