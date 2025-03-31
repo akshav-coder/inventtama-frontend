@@ -29,32 +29,32 @@ const Dashboard = () => {
       </Typography>
 
       <Grid container spacing={2}>
-        <Grid item xs={6} md={3}>
+        <Grid size={{ xs: 6, md: 3 }}>
           <Paper sx={{ p: 2 }}>
             <Typography variant="subtitle2">Today’s Purchases</Typography>
             <Typography variant="h6">{purchasesToday.length}</Typography>
           </Paper>
         </Grid>
-        <Grid item xs={6} md={3}>
+        <Grid size={{ xs: 6, md: 3 }}>
           <Paper sx={{ p: 2 }}>
             <Typography variant="subtitle2">Today’s Sales</Typography>
             <Typography variant="h6">{salesToday.length}</Typography>
           </Paper>
         </Grid>
-        <Grid item xs={6} md={3}>
+        <Grid size={{ xs: 6, md: 3 }}>
           <Paper sx={{ p: 2 }}>
             <Typography variant="subtitle2">Wholesale Outstanding</Typography>
             <Typography variant="h6">₹{totalWholesaleBalance}</Typography>
           </Paper>
         </Grid>
-        <Grid item xs={6} md={3}>
+        <Grid size={{ xs: 6, md: 3 }}>
           <Paper sx={{ p: 2 }}>
             <Typography variant="subtitle2">Supplier Outstanding</Typography>
             <Typography variant="h6">₹{totalSupplierBalance}</Typography>
           </Paper>
         </Grid>
 
-        <Grid item xs={12} md={6}>
+        <Grid size={{ xs: 12, md: 6 }}>
           <Paper sx={{ p: 2 }}>
             <Typography variant="subtitle1" mb={1}>
               Inventory Overview
@@ -63,7 +63,7 @@ const Dashboard = () => {
           </Paper>
         </Grid>
 
-        <Grid item xs={12} md={6}>
+        <Grid size={{ xs: 12, md: 6 }}>
           <Paper sx={{ p: 2 }}>
             <Typography variant="subtitle1" mb={1}>
               Credit Breakdown
